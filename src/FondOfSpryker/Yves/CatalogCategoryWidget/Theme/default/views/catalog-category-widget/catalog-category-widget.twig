@@ -1,0 +1,13 @@
+{% extends template('widget') %}
+
+{% define data = {
+    categories: _widget.categories
+} %}
+
+{% block body %}
+    ####
+    <pre>
+        {{ dump(data.categories) }}
+    </pre>
+    #####
+{% endblock %}
