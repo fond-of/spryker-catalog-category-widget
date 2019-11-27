@@ -4,7 +4,7 @@ namespace FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client;
 
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 
-interface CatalogPageWidgetToCategoryStoreStorageClientInterface
+interface CatalogCategoryWidgetToCategoryStoreStorageClientInterface
 {
     /**
      * @param int $idCategoryStorageNode

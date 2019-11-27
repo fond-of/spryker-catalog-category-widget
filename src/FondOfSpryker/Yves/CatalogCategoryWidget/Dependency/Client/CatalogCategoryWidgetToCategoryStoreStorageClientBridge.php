@@ -5,7 +5,7 @@ namespace FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client;
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Spryker\Client\CategoryStorage\CategoryStorageClientInterface;
 
-class CatalogPageWidgetToCategoryStoreStorageClientBridge implements CatalogPageWidgetToCategoryStoreStorageClientInterface
+class CatalogCategoryWidgetToCategoryStoreStorageClientBridge implements CatalogCategoryWidgetToCategoryStoreStorageClientInterface
 {
     /**
      * @var \Spryker\Client\CategoryStorage\CategoryStorageClientInterface

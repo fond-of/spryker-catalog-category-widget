@@ -3,10 +3,12 @@
 namespace FondOfSpryker\Yves\CatalogCategoryWidget\Widget;
 
 use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Plugin\CategoryWidget\CategoryBlockWidgetPluginInterface;
+use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Spryker\Yves\Kernel\Widget\AbstractWidgetPlugin;
 
 /**
  * @method \FondOfSpryker\Yves\CatalogCategoryWidget\CatalogCategoryWidgetFactory getFactory()
+ * @method \FondOfSpryker\Client\CatalogCategoryWidget\CatalogCategoryWidgetClientInterface getClient()
  */
 class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements CategoryBlockWidgetPluginInterface
 {
@@ -25,6 +27,10 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
             ->getCategoryStoreStorageClient()
             ->getCategoryNodeById($idCategory, $locale);
 
+        if (!$categoryNode) {
+            return;
+        }
+
         $storeTransfer = $this->getFactory()->getStore();
         $storeName = explode("_", $storeTransfer->getStoreName())[0];
         $this->addParameter('storename', strtolower($storeName));
@@ -38,7 +44,7 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
             return;
         }
 
-        if (count($categoryNode->getChildren()) > 0) {
+        if ($categoryNode->getChildren()->count() > 0) {
             $this->addParameter('categories', $categoryNode->getChildren());
             $this->addParameter('parentCategory', $categoryNode);
             $this->addParameter('idCategory', $idCategory);
@@ -47,9 +53,16 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
             return;
         }
 
-        if (count($categoryNode->getChildren()) === 0) {
-            $this->addParameter('categories', $categoryNode->getParents()[0]->getChildren());
-            $this->addParameter('parentCategory', $categoryNode->getParents()[0]);
+        if ($categoryNode->getChildren()->count() === 0 && $categoryNode->getParents()->count() === 1) {
+            $parent = $this->getFullParent($categoryNode, $locale);
+            $children = $parent->getChildren();
+
+            foreach($parent->getChildren() as $child) {
+                $a = $child;
+            }
+
+            $this->addParameter('categories', $parent->getChildren());
+            $this->addParameter('parentCategory', $parent);
             $this->addParameter('idCategory', $idCategory);
             $this->addParameter('render', $render);
 
@@ -58,11 +71,28 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
     }
 
     /**
-     * Specification:
-     * - Returns the name of the widget as it's used in templates.
+     * @param CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param string $locale
      *
-     * @api
+     * @return array
      *
+     * @throws
+     */
+    protected function getFullParent(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, string $locale): CategoryNodeStorageTransfer
+    {
+        if ($categoryNodeStorageTransfer->getParents()->count() !== 1) {
+            return $categoryNodeStorageTransfer;
+        }
+
+        /** @var CategoryNodeStorageTransfer $parent */
+        $parent = $categoryNodeStorageTransfer->getParents()[0];
+
+        return $this->getFactory()
+            ->getCategoryStoreStorageClient()
+            ->getCategoryNodeById($parent->getNodeId(), $locale);
+    }
+
+    /**
      * @return string
      */
     public static function getName()
@@ -71,11 +101,6 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
     }
 
     /**
-     * Specification:
-     * - Returns the the template file path to render the widget.
-     *
-     * @api
-     *
      * @return string
      */
     public static function getTemplate()

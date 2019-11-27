@@ -3,7 +3,8 @@
 
 namespace FondOfSpryker\Yves\CatalogCategoryWidget;
 
-use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogPageWidgetToCategoryStoreStorageClientBridge;
+use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCatalogCategoryClientBridge;
+use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCategoryStoreStorageClientBridge;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Yves\Kernel\Container;
@@ -11,6 +12,7 @@ use Spryker\Yves\Kernel\Container;
 class CatalogCategoryWidgetDependencyProvider extends AbstractBundleDependencyProvider
 {
     public const CLIENT_CATEGORY_STORE_STORAGE = 'CLIENT_CATEGORY_STORE_STORAGE';
+    public const CLIENT_CATALOG_CATEGORY = 'CLIENT_CATALOG_CATEGORY';
     public const STORE = 'STORE';
 
     /**
@@ -35,7 +37,9 @@ class CatalogCategoryWidgetDependencyProvider extends AbstractBundleDependencyPr
     protected function addCategoryStoreStorageClient(Container $container): Container
     {
         $container[static::CLIENT_CATEGORY_STORE_STORAGE] = function (Container $container) {
-            return new CatalogPageWidgetToCategoryStoreStorageClientBridge($container->getLocator()->categoryStoreStorage()->client());
+            return new CatalogCategoryWidgetToCategoryStoreStorageClientBridge(
+                $container->getLocator()->categoryStoreStorage()->client()
+            );
         };
 
         return $container;
