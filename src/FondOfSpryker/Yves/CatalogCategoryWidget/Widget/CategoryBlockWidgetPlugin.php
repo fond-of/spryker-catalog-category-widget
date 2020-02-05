@@ -57,7 +57,7 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
             $parent = $this->getFullParent($categoryNode, $locale);
             $children = $parent->getChildren();
 
-            foreach($parent->getChildren() as $child) {
+            foreach ($parent->getChildren() as $child) {
                 $a = $child;
             }
 
@@ -71,12 +71,10 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
     }
 
     /**
-     * @param CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
      * @param string $locale
      *
-     * @return array
-     *
-     * @throws
+     * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
      */
     protected function getFullParent(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, string $locale): CategoryNodeStorageTransfer
     {
@@ -84,7 +82,7 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
             return $categoryNodeStorageTransfer;
         }
 
-        /** @var CategoryNodeStorageTransfer $parent */
+        /** @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer $parent */
         $parent = $categoryNodeStorageTransfer->getParents()[0];
 
         return $this->getFactory()

@@ -1,9 +1,7 @@
 <?php
 
-
 namespace FondOfSpryker\Yves\CatalogCategoryWidget;
 
-use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCatalogCategoryClientBridge;
 use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCategoryStoreStorageClientBridge;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;

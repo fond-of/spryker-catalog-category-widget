@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Yves\CatalogCategoryWidget;
 
-use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCatalogCategoryClientInterface;
 use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCategoryStoreStorageClientInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Yves\Kernel\AbstractFactory;
@@ -11,8 +10,6 @@ class CatalogCategoryWidgetFactory extends AbstractFactory
 {
     /**
      * @return CatalogCategoryWidgetToCategoryStoreStorageClientInterface;
-     * @throws
-     *
      */
     public function getCategoryStoreStorageClient(): CatalogCategoryWidgetToCategoryStoreStorageClientInterface
     {
@@ -20,8 +17,6 @@ class CatalogCategoryWidgetFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Shared\Kernel\Store
      */
     public function getStore(): Store
