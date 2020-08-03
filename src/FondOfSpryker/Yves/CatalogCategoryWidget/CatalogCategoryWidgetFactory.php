@@ -9,7 +9,7 @@ use Spryker\Yves\Kernel\AbstractFactory;
 class CatalogCategoryWidgetFactory extends AbstractFactory
 {
     /**
-     * @return CatalogCategoryWidgetToCategoryStoreStorageClientInterface;
+     * @return \FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Client\CatalogCategoryWidgetToCategoryStoreStorageClientInterface
      */
     public function getCategoryStoreStorageClient(): CatalogCategoryWidgetToCategoryStoreStorageClientInterface
     {

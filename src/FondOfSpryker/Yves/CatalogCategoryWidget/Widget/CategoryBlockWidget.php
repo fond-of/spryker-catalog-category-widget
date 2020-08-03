@@ -2,31 +2,82 @@
 
 namespace FondOfSpryker\Yves\CatalogCategoryWidget\Widget;
 
-use FondOfSpryker\Yves\CatalogCategoryWidget\Dependency\Plugin\CategoryWidget\CategoryBlockWidgetPluginInterface;
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
-use Spryker\Yves\Kernel\Widget\AbstractWidgetPlugin;
+use Spryker\Yves\Kernel\Widget\AbstractWidget;
 
 /**
  * @method \FondOfSpryker\Yves\CatalogCategoryWidget\CatalogCategoryWidgetFactory getFactory()
- * @method \FondOfSpryker\Client\CatalogCategoryWidget\CatalogCategoryWidgetClientInterface getClient()
  */
-class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements CategoryBlockWidgetPluginInterface
+class CategoryBlockWidget extends AbstractWidget
 {
+    public const NAME = 'CategoryBlockWidgetPlugin';
+
     /**
-     * @api
-     *
      * @param int $idCategory
      * @param string $locale
      * @param bool $render
-     *
-     * @return void
      */
-    public function initialize(int $idCategory, string $locale, bool $render = true): void
+    public function __construct(int $idCategory, string $locale, bool $render = true)
     {
         $categoryNode = $this->getFactory()
             ->getCategoryStoreStorageClient()
             ->getCategoryNodeById($idCategory, $locale);
 
+        $this->init($categoryNode, $idCategory, $render, $locale);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param string $locale
+     *
+     * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
+     */
+    protected function getFullParent(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, string $locale): CategoryNodeStorageTransfer
+    {
+        if ($categoryNodeStorageTransfer->getParents()->count() !== 1) {
+            return $categoryNodeStorageTransfer;
+        }
+
+        /** @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer $parent */
+        $parent = $categoryNodeStorageTransfer->getParents()[0];
+
+        return $this->getFactory()
+            ->getCategoryStoreStorageClient()
+            ->getCategoryNodeById($parent->getNodeId(), $locale);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public static function getName(): string
+    {
+        return static::NAME;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTemplate(): string
+    {
+        return '@CatalogCategoryWidget/views/catalog-category-widget/catalog-category-widget.twig';
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNode
+     * @param int $idCategory
+     * @param bool $render
+     * @param string $locale
+     *
+     * @return void
+     */
+    protected function init(
+        CategoryNodeStorageTransfer $categoryNode,
+        int $idCategory,
+        bool $render,
+        string $locale
+    ): void {
         $storeTransfer = $this->getFactory()->getStore();
         $storeName = explode('_', $storeTransfer->getStoreName())[0];
         $this->addParameter('storename', strtolower($storeName));
@@ -64,41 +115,5 @@ class CategoryBlockWidgetPlugin extends AbstractWidgetPlugin implements Category
 
             return;
         }
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param string $locale
-     *
-     * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
-     */
-    protected function getFullParent(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, string $locale): CategoryNodeStorageTransfer
-    {
-        if ($categoryNodeStorageTransfer->getParents()->count() !== 1) {
-            return $categoryNodeStorageTransfer;
-        }
-
-        /** @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer $parent */
-        $parent = $categoryNodeStorageTransfer->getParents()[0];
-
-        return $this->getFactory()
-            ->getCategoryStoreStorageClient()
-            ->getCategoryNodeById($parent->getNodeId(), $locale);
-    }
-
-    /**
-     * @return string
-     */
-    public static function getName()
-    {
-        return static::NAME;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getTemplate()
-    {
-        return '@CatalogCategoryWidget/views/catalog-category-widget/catalog-category-widget.twig';
     }
 }
